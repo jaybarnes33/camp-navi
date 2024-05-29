@@ -19,6 +19,7 @@ const index = () => {
 
           <Avatar />
         </View>
+
         <View className="bg-white space-y-3 p-3 relative  rounded-xl">
           <Text className="text-2xl font-bold">22°</Text>
           <Text className="text-gray-500 text-base">
