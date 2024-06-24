@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.dishplug.camp-navi",
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyDBip8f6XGvMW1vgn8p1ThCPeVqKyjfLOE"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +31,11 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@rnmapbox/maps",
+      {
+        "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoiam9obm55YnYzMyIsImEiOiJjbHhzOGJseDcwYmd0MmlyNjNpZnNwbWU5In0.1KsX7Wp878l0E2ZmebIp-Q"
+      }
     ],
     "experiments": {
       "typedRoutes": true

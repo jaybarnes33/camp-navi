@@ -5,17 +5,17 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 
 import { useLocation } from "@/context/Location";
 
-import { Feather, FontAwesome6 } from "@expo/vector-icons";
-
 import Header from "@/components/layout/Header";
 import { GooglePlaceDetail } from "react-native-google-places-autocomplete";
 import PlaceImage from "@/components/core/PlaceImage";
+import { getPath } from "@/utils";
 
 const Map = () => {
   const [places, setPlaces] = useState([]);
 
   const { location } = useLocation();
   const [place, setPlace] = useState<LatLng>();
+  const [polyline, setPolyline] = useState<LatLng[]>([]);
 
   useEffect(() => {
     if (location) {
@@ -30,6 +30,21 @@ const Map = () => {
         .catch((e) => console.log(e));
     }
   }, [location]);
+
+  const selectPlace = async (place: GooglePlaceDetail) => {
+    setPlace({
+      latitude: place.geometry.location.lat,
+      longitude: place.geometry.location.lng,
+    });
+
+    const path = await getPath(
+      `${location.latitude},${location.longitude}`,
+      `place_id:${place.place_id}`
+    );
+    console.log(path);
+    path?.coordinates && setPolyline(path.coordinates);
+  };
+
   return (
     <View className="flex-1">
       <View className="mt-14 px-4 absolute z-50 w-full">
@@ -56,6 +71,7 @@ const Map = () => {
         />
         {place?.latitude && <Marker coordinate={place} pinColor="blue" />}
         <Marker coordinate={location} />
+        <Polyline coordinates={polyline} />
       </MapView>
 
       <ScrollView
@@ -71,12 +87,7 @@ const Map = () => {
             place: GooglePlaceDetail & { photos: { photo_reference: string }[] }
           ) => (
             <TouchableOpacity
-              onPress={() =>
-                setPlace({
-                  latitude: place.geometry.location.lat,
-                  longitude: place.geometry.location.lng,
-                })
-              }
+              onPress={() => selectPlace(place)}
               className="h-full bg-white w-[250px] mr-4 rounded-lg p-4 border-gray-200 shadow border-2 flex-row space-x-2 justify-between items-center"
               key={place.place_id}
             >
