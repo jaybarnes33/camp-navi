@@ -1,5 +1,5 @@
 import React, { ComponentType } from "react";
-import { Text, TextInput, View } from "react-native";
+import { Text, View } from "react-native";
 import {
   GooglePlaceData,
   GooglePlaceDetail,

@@ -10,7 +10,6 @@ import {
 
 import * as Geolocation from "expo-location";
 import { LatLng } from "react-native-maps";
-import { Context, useAuth } from "./auth/AuthContext";
 
 interface contextProps {
   location: LatLng;

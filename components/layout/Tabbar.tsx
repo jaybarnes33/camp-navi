@@ -1,9 +1,8 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, TouchableOpacity, Image } from "react-native";
 import React, { ReactNode } from "react";
 
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
-import { Profile, TicketDiscount } from "iconsax-react-native";
 import { router } from "expo-router";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
 

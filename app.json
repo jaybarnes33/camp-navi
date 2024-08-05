@@ -34,7 +34,7 @@
       "expo-router",
       "@rnmapbox/maps",
       {
-        "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoiam9obm55YnYzMyIsImEiOiJjbHhzOGJseDcwYmd0MmlyNjNpZnNwbWU5In0.1KsX7Wp878l0E2ZmebIp-Q"
+        "RNMapboxMapsDownloadToken": "pk.eyJ1Ijoiam9obm55YnYzMyIsImEiOiJjbHhzNWcycnkwbzB2MnFzZWVnNDNlZHlsIn0.nU1BH97s33vuy3VdGEGOVg"
       }
     ],
     "experiments": {

@@ -20,10 +20,11 @@ const Map = () => {
   useEffect(() => {
     if (location) {
       fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=800&key=AIzaSyDBip8f6XGvMW1vgn8p1ThCPeVqKyjfLOE`
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=800&key=${process.env.EXPO_PUBLIC_MAPS_KEY}`
       )
         .then(async (response) => {
           const data = await response.json();
+          console.log({ data });
           return data;
         })
         .then((data) => setPlaces(data.results))
