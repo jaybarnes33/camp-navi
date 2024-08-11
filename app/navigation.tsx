@@ -1,111 +1,132 @@
-import React, { useState, useEffect, ComponentType } from "react";
-import MapView, { Circle, LatLng, Marker, Polyline } from "react-native-maps";
-
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 
 import { useLocation } from "@/context/Location";
 
-import Header from "@/components/layout/Header";
+import MapView, { LatLng, Marker, Polyline } from "react-native-maps";
+
+import { useRoute } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation, useRouter } from "expo-router";
 import { GooglePlaceDetail } from "react-native-google-places-autocomplete";
-import PlaceImage from "@/components/core/PlaceImage";
-import { getPath } from "@/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Map = () => {
-  const [places, setPlaces] = useState([]);
+const Explore = () => {
+  const { location, setLocation } = useLocation();
 
-  const { location } = useLocation();
-  const [place, setPlace] = useState<LatLng>();
-  const [polyline, setPolyline] = useState<LatLng[]>([]);
+  const { back } = useRouter();
+  const { place } = useRoute().params as {
+    place: GooglePlaceDetail & { photos: { photo_reference: string }[] };
+  };
+  const { push } = useRouter();
+  const [directions, setDirections] = useState([]);
+  const [instructions, setInstructions] = useState([]);
 
+  const handleClick = () => {
+    console.log("clicked");
+  };
+
+  const endNavigation = async () => {
+    try {
+      const recents = Array.from(
+        JSON.parse((await AsyncStorage.getItem("recents")) as string) || []
+      );
+      await AsyncStorage.setItem(
+        "recents",
+        JSON.stringify([
+          { ...place, time: new Date().toISOString() },
+          ...recents,
+        ])
+      );
+      //@ts-ignore
+      push("(tabs)");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    if (location) {
+    if (location && place) {
+      const origin = `${location.longitude},${location.latitude}`;
+      const destination = `${place.geometry.location.lng},${place.geometry.location.lat}`;
       fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=800&key=${process.env.EXPO_PUBLIC_MAPS_KEY}`
+        `https://api.mapbox.com/directions/v5/mapbox/walking/${origin};${destination}?geometries=geojson&access_token=${process.env.EXPO_PUBLIC_MAPBOX}&steps=true`
       )
         .then(async (response) => {
           const data = await response.json();
           return data;
         })
-        .then((data) => setPlaces(data.results))
+        .then((data) => {
+          const route = data.routes[0].geometry.coordinates;
+          setDirections(
+            route.map((coord: [number, number]) => ({
+              latitude: coord[1],
+              longitude: coord[0],
+            }))
+          );
+          setInstructions(data.routes[0].legs[0].steps);
+        })
         .catch((e) => console.log(e));
     }
-  }, [location]);
-
-  const selectPlace = async (place: GooglePlaceDetail) => {
-    setPlace({
-      latitude: place.geometry.location.lat,
-      longitude: place.geometry.location.lng,
-    });
-
-    const path = await getPath(
-      `${location.latitude},${location.longitude}`,
-      `place_id:${place.place_id}`
-    );
-    console.log(path);
-    path?.coordinates && setPolyline(path.coordinates);
-  };
+  }, [place]);
 
   return (
     <View className="flex-1">
-      <View className="mt-14 px-4 absolute z-50 w-full">
-        <Header />
-      </View>
+      <TouchableOpacity className="absolute top-10 z-50 mx-5" onPress={back}>
+        <FontAwesome name="arrow-left" size={30} />
+      </TouchableOpacity>
       <MapView
-        className="flex-1 h-screen "
-        zoomControlEnabled={true}
-        showsCompass
-        showsMyLocationButton
-        showsIndoors
-        showsTraffic
-        showsScale
-        region={{ ...location, latitudeDelta: 0.0122, longitudeDelta: 0.0121 }}
-      >
-        <Circle
-          center={location}
-          radius={500}
-          shouldRasterizeIOS
-          fillColor="#4eacfe17"
-          strokeWidth={1}
-          strokeColor="#4eacfe2c"
-          lineDashPattern={[5]}
-        />
-        {place?.latitude && <Marker coordinate={place} pinColor="blue" />}
-        <Marker coordinate={location} />
-        <Polyline coordinates={polyline} />
-      </MapView>
-
-      <ScrollView
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "center",
+        style={{ flex: 1 }}
+        camera={{
+          center: {
+            latitude: location.latitude,
+            longitude: location.longitude,
+          },
+          pitch: 0.3,
+          heading: 0,
+          altitude: 1000,
         }}
-        horizontal
-        className="absolute w-full bottom-20 h-[100px] px-3 "
       >
-        {places.map(
-          (
-            place: GooglePlaceDetail & { photos: { photo_reference: string }[] }
-          ) => (
-            <TouchableOpacity
-              onPress={() => selectPlace(place)}
-              className="h-full bg-white w-[250px] mr-4 rounded-lg p-4 border-gray-200 shadow border-2 flex-row space-x-2 justify-between items-center"
-              key={place.place_id}
-            >
-              {place.photos?.length && (
-                <PlaceImage reference={place.photos[0].photo_reference} />
-              )}
-              <View className="flex-1">
-                <Text className="font-bold">{place.name}</Text>
-                <Text className="capitalize text-gray-600 font-semibold">
-                  {place.types[0].replaceAll("_", " ")}
-                </Text>
-              </View>
+        {location && <Marker coordinate={location} />}
+        {directions.length > 0 && <Polyline coordinates={directions} />}
+        {place && (
+          <Marker
+            coordinate={{
+              latitude: place.geometry.location.lat,
+              longitude: place.geometry.location.lng,
+            }}
+          >
+            <TouchableOpacity className="items-center">
+              <FontAwesome name="building" size={30} />
+              <Text>{place.name}</Text>
             </TouchableOpacity>
-          )
+          </Marker>
         )}
-      </ScrollView>
+      </MapView>
+      {instructions.length > 0 && (
+        <View className="absolute  bottom-48 w-full">
+          <Text className="mx-4 my-3 text-xl">Directions to {place.name}</Text>
+          <FlatList
+            data={instructions}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({ item }) => (
+              <Text className="mx-4 my-1">
+                {
+                  //@ts-ignore
+                  item.maneuver.instruction
+                }
+              </Text>
+            )}
+          />
+          <TouchableOpacity
+            onPress={endNavigation}
+            className="my-4 flex-row items-center mx-4 justify-center bg-black px-5 py-3"
+          >
+            <Text className="text-white">End Navigation</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
 
-export default Map;
+export default Explore;

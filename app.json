@@ -16,13 +16,21 @@
       "bundleIdentifier": "com.dishplug.camp-navi",
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "AIzaSyDBip8f6XGvMW1vgn8p1ThCPeVqKyjfLOE"
+        "googleMaps": {
+          "apiKey": "AIzaSyA46uIZsoYfMk_F_us1_dK2eEX9CVgHvZc"
+        }
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.dishplug.campnavi",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyA46uIZsoYfMk_F_us1_dK2eEX9CVgHvZc"
+        }
       }
     },
     "web": {
@@ -30,17 +38,10 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "@rnmapbox/maps",
-        {
-          "RNMapboxMapsDownloadToken": "pk.eyJ1Ijoiam9obm55YnYzMyIsImEiOiJjbHhzNWcycnkwbzB2MnFzZWVnNDNlZHlsIn0.nU1BH97s33vuy3VdGEGOVg"
-        }
-      ]
-    ],
+    "plugins": ["expo-router"],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "tsconfigPaths": true
     }
   }
 }

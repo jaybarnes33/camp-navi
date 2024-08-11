@@ -1,11 +1,14 @@
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import React from "react";
+import RecentlyVisited from "@/components/Home/Recents";
 
 const explore = () => {
   return (
-    <View>
-      <Text>explore</Text>
-    </View>
+    <SafeAreaView>
+      <View className="m-4">
+        <RecentlyVisited />
+      </View>
+    </SafeAreaView>
   );
 };
 

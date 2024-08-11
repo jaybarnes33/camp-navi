@@ -10,30 +10,41 @@ import Avatar from "../core/Avatar";
 
 import { useRouter } from "expo-router";
 
-const Header = ({ left }: { left?: ReactNode }) => {
+const Header = ({
+  left,
+  onSelect,
+}: {
+  left?: ReactNode;
+  onSelect: (data: {
+    data: GooglePlaceData;
+    details: GooglePlaceDetail;
+  }) => void;
+}) => {
   const router = useRouter();
   return (
-    <View className="flex-row justify-between items-center">
-      {left ? (
-        left
-      ) : (
-        <TouchableOpacity onPress={() => router.back()}>
-          <MaterialCommunityIcons name="keyboard-backspace" size={20} />
-        </TouchableOpacity>
-      )}
-      <View className="flex-1 mx-2 h-20">
+    <View className="flex-row justify-between items-start">
+      <View className="absolute z-40 h-12 justify-center">
+        {left ? (
+          left
+        ) : (
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className=" h-10 w-7  justify-center items-center
+       bg-black"
+          >
+            <MaterialCommunityIcons
+              name="keyboard-backspace"
+              color="white"
+              size={20}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+      <View className="flex-1">
         <GooglePlacesInput
-          onSelect={(
-            data: GooglePlaceData,
-            details: GooglePlaceDetail | null
-          ) => details && console.log(details)}
-          left={
-            (
-              <View className="h-10 w-10 items-center justify-center ">
-                <Feather name="search" color="blue" />
-              </View>
-            ) as unknown as ComponentType<{}>
-          }
+          label="Where to?"
+          onSelect={(data) => onSelect(data)}
+          left={<Feather name="search" />}
         />
       </View>
       {/* <Avatar /> */}

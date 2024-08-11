@@ -6,12 +6,20 @@ import { Feather } from "@expo/vector-icons";
 import Categories from "@/components/Home/Categories";
 import Recents from "@/components/Home/Recents";
 import Header from "@/components/layout/Header";
+import { useNavigation } from "expo-router";
 
 const index = () => {
+  const { navigate } = useNavigation();
   return (
     <Screen>
       <View className="space-y-4">
-        <Header left={<Feather name="menu" size={20} />} />
+        <Header
+          onSelect={(res) =>
+            //@ts-ignore
+            navigate("navigation", { place: res.details })
+          }
+          left={<Feather name="menu" size={20} />}
+        />
 
         <View className="bg-white space-y-3 p-3 relative">
           <Text className="text-2xl font-bold">22°</Text>
@@ -28,7 +36,7 @@ const index = () => {
           />
         </View>
         <Categories />
-        <Recents />
+        <Recents limitted />
       </View>
     </Screen>
   );

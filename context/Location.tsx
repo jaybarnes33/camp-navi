@@ -37,8 +37,14 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
             },
             (location) => {
               setLocation({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
+                latitude:
+                  location.coords.latitude != 0
+                    ? location.coords.latitude
+                    : 6.5244,
+                longitude:
+                  location.coords.longitude != 0
+                    ? location.coords.longitude
+                    : -1.222,
               });
             }
           );
