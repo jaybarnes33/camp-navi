@@ -14,24 +14,14 @@
     },
     "ios": {
       "bundleIdentifier": "com.dishplug.camp-navi",
-      "supportsTablet": true,
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyA46uIZsoYfMk_F_us1_dK2eEX9CVgHvZc"
-        }
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.dishplug.campnavi",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyA46uIZsoYfMk_F_us1_dK2eEX9CVgHvZc"
-        }
-      }
+      "package": "com.dishplug.campnavi"
     },
     "web": {
       "bundler": "metro",
