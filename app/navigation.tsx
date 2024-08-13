@@ -81,13 +81,16 @@ const Explore = () => {
             latitude: location.latitude,
             longitude: location.longitude,
           },
-          pitch: 0.3,
-          heading: 0,
+          pitch: 20,
+          heading: 1,
           altitude: 1000,
+          zoom: 20,
         }}
       >
         {location && <Marker coordinate={location} />}
-        {directions.length > 0 && <Polyline coordinates={directions} />}
+        {directions.length > 0 && (
+          <Polyline coordinates={directions} strokeWidth={10} />
+        )}
         {place && (
           <Marker
             coordinate={{
@@ -103,7 +106,7 @@ const Explore = () => {
         )}
       </MapView>
       {instructions.length > 0 && (
-        <View className="absolute  bottom-48 w-full">
+        <View className="absolute bg-[#f4f4f443] bottom-20  w-full">
           <Text className="mx-4 my-3 text-xl">Directions to {place.name}</Text>
           <FlatList
             data={instructions}
