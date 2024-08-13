@@ -6,13 +6,13 @@ import Card from "./card";
 const categories = [
   {
     name: "Lecture Rooms",
-    image: require("@/assets/images/lecture-room.avif"),
+    image: require("@/assets/images/lecture-room.jpg"),
   },
   {
     name: "Hostels",
-    image: require("@/assets/images/hostels.avif"),
+    image: require("@/assets/images/hostels.jpg"),
   },
-  { name: "Shopping", image: require("@/assets/images/groceries.avif") },
+  { name: "Shopping", image: require("@/assets/images/groceries.jpg") },
   { name: "Gym", image: require("@/assets/images/gym.jpg") },
 ];
 const Categories = () => {
