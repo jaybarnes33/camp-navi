@@ -10,20 +10,20 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   const icons: Record<string, [ReactNode, ReactNode]> = {
     index: [
       <Feather name="home" size={20} color="gray" />,
-      <Feather name="home" size={20} color="black" />,
+      <Feather name="home" size={20} color="black" />
     ],
     explore: [
       <Feather name="map" size={20} color="gray" />,
-      <Feather name="map" size={20} color="black" />,
+      <Feather name="map" size={20} color="black" />
     ],
     profile: [
       <FontAwesome5 size={20} name="user" color="gray" />,
-      <FontAwesome5 size={20} name="user" variant="Bold" color="black" />,
+      <FontAwesome5 size={20} name="user" variant="Bold" color="black" />
     ],
     activity: [
       <Feather size={20} name="activity" color="gray" />,
-      <Feather size={20} name="activity" color="black" />,
-    ],
+      <Feather size={20} name="activity" color="black" />
+    ]
   };
 
   return (
@@ -47,7 +47,7 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
           const onLongPress = () => {
             navigation.emit({
               type: "tabLongPress",
-              target: route.key,
+              target: route.key
             });
           };
 
@@ -101,7 +101,7 @@ const TabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
           const onLongPress = () => {
             navigation.emit({
               type: "tabLongPress",
-              target: route.key,
+              target: route.key
             });
           };
 

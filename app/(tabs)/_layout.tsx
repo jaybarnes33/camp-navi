@@ -13,10 +13,10 @@ export default function TabLayout() {
   return (
     <Tabs
       initialRouteName="index"
-      tabBar={(props) => <TabBar {...props} />}
+      tabBar={props => <TabBar {...props} />}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
+        headerShown: false
       }}
     >
       <Tabs.Screen name="index" />
