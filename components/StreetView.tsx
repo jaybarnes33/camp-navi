@@ -1,8 +1,7 @@
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
-import { ExpoWebGLRenderingContext, GLView, GLViewProps } from "expo-gl";
+import { GLView, GLViewProps } from "expo-gl";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { runOnUI } from "react-native-reanimated";
 
 export default function StreetView() {
   const [facing, setFacing] = useState<CameraType>("back");
@@ -29,28 +28,57 @@ export default function StreetView() {
     setFacing(current => (current === "back" ? "front" : "back"));
   }
 
-  const render = (gl: ExpoWebGLRenderingContext | undefined) => {
-    "worklet";
-    // add your WebGL code here
-  };
-
   const onContextCreate: GLViewProps["onContextCreate"] = gl => {
-    runOnUI((contextId: number) => {
-      "worklet";
-      const gl = GLView.getWorkletContext(contextId);
-      render(gl);
-    })(gl.contextId);
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    gl.clearColor(0, 1, 1, 1);
+
+    // Create vertex shader (shape & position)
+    const vert = gl.createShader(gl.VERTEX_SHADER)!;
+    gl.shaderSource(
+      vert,
+      `
+    void main(void) {
+      gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+      gl_PointSize = 150.0;
+    }
+  `
+    );
+    gl.compileShader(vert);
+
+    // Create fragment shader (color)
+    const frag = gl.createShader(gl.FRAGMENT_SHADER)!;
+    gl.shaderSource(
+      frag,
+      `
+    void main(void) {
+      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+  `
+    );
+    gl.compileShader(frag);
+
+    // Link together into a program
+    const program = gl.createProgram()!;
+    gl.attachShader(program, vert);
+    gl.attachShader(program, frag);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.POINTS, 0, 1);
+
+    gl.flush();
+    gl.endFrameEXP();
   };
 
   return (
     <View style={styles.container}>
       <CameraView style={styles.camera} facing={facing}>
         <View style={styles.buttonContainer}>
-          <GLView
+          {/* <GLView
             style={{ width: 300, height: 300 }}
-            enableExperimentalWorkletSupport
             onContextCreate={onContextCreate}
-          />
+          /> */}
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
